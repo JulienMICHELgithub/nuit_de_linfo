@@ -1,5 +1,8 @@
 'use client';
 
+// src/game/EventBus.ts
+import { EventEmitter } from "events";
+
 // Used to emit events between components, HTML and Phaser scenes
 let eventBusInstance: any = null;
 

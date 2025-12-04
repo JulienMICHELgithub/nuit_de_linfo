@@ -1,7 +1,7 @@
 'use client';
 
 import { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
-import { EventBus } from '@/game/EventBus';
+import { EventBus } from '@/app/game/EventBus';
 
 export interface IRefPhaserGame
 {
@@ -21,7 +21,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
     useLayoutEffect(() =>
     {
         const initGame = async () => {
-            const StartGame = (await import('@/game/main')).default;
+            const StartGame = (await import('@/app/game/main')).default;
             
             if (game.current === null)
             {
