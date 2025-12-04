@@ -19,8 +19,8 @@
             "texture": {
                 "key": "background"
             },
-            "x": 517,
-            "y": 170
+            "x": 511,
+            "y": 384
         },
         {
             "type": "Image",
@@ -43,7 +43,7 @@
             },
             "x": 530,
             "y": 441,
-            "scaleX": 0.5,
+            "scaleX": 0.51,
             "scaleY": 0.5
         }
     ],

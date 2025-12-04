@@ -1,7 +1,7 @@
 // You can write more code here
 
 /* START OF COMPILED CODE */
-
+'use client';
 import { Scene } from "phaser";
 /* START-USER-IMPORTS */
 /* END-USER-IMPORTS */

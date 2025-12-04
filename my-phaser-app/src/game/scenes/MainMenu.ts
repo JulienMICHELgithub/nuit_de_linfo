@@ -2,12 +2,11 @@
 
 /* START OF COMPILED CODE */
 
-import { Scene } from 'phaser';
 /* START-USER-IMPORTS */
 import { EventBus } from '../EventBus';
 /* END-USER-IMPORTS */
 
-export default class MainMenu extends Scene {
+export default class MainMenu extends Phaser.Scene {
 
 	constructor() {
 		super("MainMenu");
@@ -20,7 +19,7 @@ export default class MainMenu extends Scene {
 	editorCreate(): void {
 
 		// background
-		this.add.image(517, 170, "background");
+		this.add.image(511, 384, "background");
 
 		// logo
 		const logo = this.add.image(515, 167, "logo");
@@ -28,7 +27,7 @@ export default class MainMenu extends Scene {
 		// start_button
 		const start_button = this.add.image(530, 441, "start-button");
 		start_button.setInteractive(this.input.makePixelPerfect());
-		start_button.scaleX = 0.5;
+		start_button.scaleX = 0.51;
 		start_button.scaleY = 0.5;
 
 		this.logo = logo;
