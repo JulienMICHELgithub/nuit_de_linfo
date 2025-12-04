@@ -1,6 +1,6 @@
 'use client';
-
 import React, { useEffect, useRef } from 'react';
+import { QuestManager } from './quests/QuestManager';
 
 export default function Page() {
     const gameRef = useRef<any>(null);
@@ -8,22 +8,55 @@ export default function Page() {
     useEffect(() => {
         const initGame = async () => {
             const Phaser = await import('phaser');
-            
-            if (gameRef.current) return; // Prevent duplicate initialization
+
+            if (gameRef.current) return;
 
             gameRef.current = new Phaser.Game({
                 type: Phaser.AUTO,
-                width: 1920,
-                height: 1080,
+                width: 800,
+                height: 600,
+                parent: 'game-content',
+                physics: { default: 'arcade' },
                 scene: {
                     preload: function () {
-                        this.load.image('sky', 'https://labs.phaser.io/assets/skies/space3.png');
+                        this.load.image('player', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
+                        this.load.image('item', 'https://labs.phaser.io/assets/sprites/apple.png');
                     },
                     create: function () {
-                        this.add.image(960, 540, 'sky');
+                        // Lancer la quête Snake
+                        QuestManager.startQuest('snake1');
+
+                        this.player = this.physics.add.sprite(400, 300, 'player');
+                        this.itemsCollected = 0;
+
+                        this.item = this.physics.add.sprite(
+                            Phaser.Math.Between(50, 750),
+                            Phaser.Math.Between(50, 550),
+                            'item'
+                        );
+
+                        this.physics.add.overlap(this.player, this.item, () => {
+                            this.itemsCollected++;
+                            this.item.x = Phaser.Math.Between(50, 750);
+                            this.item.y = Phaser.Math.Between(50, 550);
+
+                            if (this.itemsCollected >= 5) {
+                                QuestManager.completeCurrent({ itemsCollected: this.itemsCollected });
+                            }
+                        });
+
+                        this.cursors = this.input.keyboard.createCursorKeys();
+                    },
+                    update: function () {
+                        const speed = 200;
+                        this.player.setVelocity(0);
+
+                        if (this.cursors.left.isDown) this.player.setVelocityX(-speed);
+                        if (this.cursors.right.isDown) this.player.setVelocityX(speed);
+                        if (this.cursors.up.isDown) this.player.setVelocityY(-speed);
+                        if (this.cursors.down.isDown) this.player.setVelocityY(speed);
                     }
-                },
-                parent: 'game-content',
+                }
             });
         };
 
@@ -37,11 +70,5 @@ export default function Page() {
         };
     }, []);
 
-    return (
-        <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-            <div id="game-content" />
-            <div className="w-full max-w-sm">
-            </div>
-        </div>
-    );
+    return <div id="game-content" className="w-full h-[600px] border" />;
 }
