@@ -34,9 +34,10 @@ export default function GamePage() {
         };
     }, []);
 
-    return (<div className='items-center justify-center m-auto'>
-            <div id="game-content" className="w-full h-screen" />
-        </div>);
+    return (
+    <div className='flex items-center justify-center h-screen w-screen bg-black'>
+        <div id="game-content" className="flex items-center justify-center" />
+    </div>);
 }
 
 
