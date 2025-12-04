@@ -29,6 +29,7 @@ export default class MainMenu extends Phaser.Scene {
 		start_button.setInteractive(this.input.makePixelPerfect());
 		start_button.scaleX = 0.51;
 		start_button.scaleY = 0.5;
+        start_button.on("pointerdown", () => this.changeScene());
 
 		this.logo = logo;
 
