@@ -1,12 +1,10 @@
 /* START OF COMPILED CODE */
-'use client';
 
-import { Scene } from "phaser";
 /* START-USER-IMPORTS */
 import { EventBus } from '../EventBus';
 /* END-USER-IMPORTS */
 
-export default class Game extends Scene {
+export default class Game extends Phaser.Scene {
 
 	constructor() {
 		super("Game");
@@ -18,15 +16,8 @@ export default class Game extends Scene {
 
 	editorCreate(): void {
 
-		// background
-		const background = this.add.image(512, 384, "background");
-		background.alpha = 0.5;
-
-		// text
-		const text = this.add.text(513, 384, "", {});
-		text.setOrigin(0.5, 0.5);
-		text.text = "Make something fun!\nand share it with us:\nsupport@phaser.io";
-		text.setStyle({ "align": "center", "color": "#ffffff", "fontFamily": "Arial Black", "fontSize": "38px", "stroke": "#000000", "strokeThickness":8});
+		// bitemap_1
+		this.add.image(510, 328, "bitemap_1");
 
 		this.events.emit("scene-awake");
 	}

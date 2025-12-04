@@ -39,7 +39,7 @@ export default class MainMenu extends Phaser.Scene {
 	private logo!: Phaser.GameObjects.Image;
 
 	/* START-USER-CODE */
-    logoTween: Phaser.Tweens.Tween | null;
+    logoTween: Phaser.Tweens.Tween | null | undefined;
 
 	// Write your code here
     create ()

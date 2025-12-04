@@ -7,6 +7,26 @@
                 "key": "background"
             },
             {
+                "url": "assets/bitemap.tmx",
+                "type": "binary",
+                "key": "bitemap"
+            },
+            {
+                "url": "assets/bitemap.png",
+                "type": "image",
+                "key": "bitemap_1"
+            },
+            {
+                "url": "assets/bitmap.json",
+                "type": "tilemapTiledJSON",
+                "key": "bitmap"
+            },
+            {
+                "url": "assets/character.png",
+                "type": "image",
+                "key": "character"
+            },
+            {
                 "url": "assets/start-button.png",
                 "type": "image",
                 "key": "start-button"

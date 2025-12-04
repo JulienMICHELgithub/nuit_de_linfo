@@ -50,14 +50,18 @@ export default class Preloader extends Scene {
 
             //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
             bar.width = 4 + (460 * progress);
-
+            
         });
+        this.load.tilemapTiledJSON('bitmap', 'assets/bitmap.json');
     }
 
     preload ()
     {
         // Use the 'pack' file to load in any assets you need for this scene
         this.load.pack('preload', 'assets/preload-asset-pack.json');
+        
+        // Load tilemap and tileset assets
+        this.load.image('bitemap', 'assets/bitemap.png');
     }
 
     create ()

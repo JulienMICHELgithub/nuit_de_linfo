@@ -14,35 +14,18 @@
     "displayList": [
         {
             "type": "Image",
-            "id": "cd0be28e-bb4f-4cb5-bedd-f9a0b9b35f0b",
-            "label": "background",
+            "id": "2708b44f-2f69-4d09-8308-34c6caae3fd4",
+            "label": "bitemap_1",
             "texture": {
-                "key": "background"
+                "key": "bitemap_1"
             },
-            "x": 512,
-            "y": 384,
-            "alpha": 0.5
-        },
-        {
-            "type": "Text",
-            "id": "14c27edb-9072-4bd8-8db8-18bd78fefb3a",
-            "label": "text",
-            "x": 513,
-            "y": 384,
-            "originX": 0.5,
-            "originY": 0.5,
-            "text": "Make something fun!\nand share it with us:\nsupport@phaser.io",
-            "align": "center",
-            "fontFamily": "Arial Black",
-            "fontSize": "38px",
-            "color": "#ffffff",
-            "stroke": "#000000",
-            "strokeThickness": 8
+            "x": 510,
+            "y": 328
         }
     ],
     "plainObjects": [],
     "meta": {
-        "app": "Phaser Editor 2D - Scene Editor",
+        "app": "Phaser Editor - Scene Editor",
         "url": "https://phaser.io/editor",
         "contentType": "phasereditor2d.core.scene.SceneContentType",
         "version": 5
