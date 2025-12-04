@@ -1,10 +1,6 @@
 "use client"
 
-import * as Phaser from 'phaser';
-import MainMenuScene from '@/app/game/scenes/MainMenu';
-import GameScene from '@/app/game/scenes/Game';
 import React, { useRef, useEffect } from 'react';
-import QCMScene from "./scenes/QCMScene";
 
 export default function GamePage() {
     const gameRef = useRef<any>(null);
@@ -12,16 +8,22 @@ export default function GamePage() {
     useEffect(() => {
         if (gameRef.current) return;
 
+        const Phaser = require('phaser');
+        const PreloaderScene = require('@/app/game/scenes/Preloader').default;
+        const MainMenuScene = require('@/app/game/scenes/MainMenu').default;
+        const GameScene = require('@/app/game/scenes/Game').default;
+        const QCMScene = require('@/app/game/scenes/QCMScene').default;
+
         const config: Phaser.Types.Core.GameConfig = {
             type: Phaser.AUTO,
-            width: 800,
+            width: 920,
             height: 600,
             parent: 'game-content',
             physics: {
                 default: 'arcade',
                 arcade: { gravity: { y: 0 }, debug: false }
             },
-            scene: [MainMenuScene, GameScene, QCMScene] // <-- MainMenu en premier
+            scene: [PreloaderScene, MainMenuScene, GameScene, QCMScene] // Preloader must be first
         };
 
         gameRef.current = new Phaser.Game(config);
@@ -32,7 +34,9 @@ export default function GamePage() {
         };
     }, []);
 
-    return <div id="game-content" className="w-full h-screen" />;
+    return (<div className='items-center justify-center m-auto'>
+            <div id="game-content" className="w-full h-screen" />
+        </div>);
 }
 
 

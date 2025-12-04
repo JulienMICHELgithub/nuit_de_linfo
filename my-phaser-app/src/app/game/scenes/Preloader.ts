@@ -21,6 +21,8 @@ export default class Preloader extends Scene {
 		// background
 		this.add.image(512, 384, "background");
 
+
+
 		// progressBar
 		const progressBar = this.add.rectangle(512, 384, 468, 32);
 		progressBar.isFilled = true;
@@ -52,6 +54,7 @@ export default class Preloader extends Scene {
             bar.width = 4 + (460 * progress);
             
         });
+        this.load.image('background', 'assets/bitemap.png');
         this.load.tilemapTiledJSON('bitmap', 'assets/bitmap.json');
     }
 

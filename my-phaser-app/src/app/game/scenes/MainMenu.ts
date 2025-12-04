@@ -1,5 +1,3 @@
-"use client"
-
 import * as Phaser from 'phaser';
 import { EventBus } from '../EventBus';
 

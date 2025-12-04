@@ -1,5 +1,3 @@
-"use client"
-
 import { Scene } from "phaser";
 import { QuestManager } from "../quests/QuestManager";
 

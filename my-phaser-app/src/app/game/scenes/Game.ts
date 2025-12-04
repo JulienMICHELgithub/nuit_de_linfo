@@ -1,87 +1,41 @@
-"use client"
 
-import { Scene } from "phaser";
-import { EventBus } from '@/app/game/EventBus';
-import { QuestManager } from "../quests/QuestManager";
+// You can write more code here
 
-export default class Game extends Scene {
-    player: any;
-    cursors: any;
-    npcs: any[] = [];
-    questActive: boolean = false;
+/* START OF COMPILED CODE */
 
-    constructor() {
-        super("Game");
-    }
+/* START-USER-IMPORTS */
+/* END-USER-IMPORTS */
 
-    preload() {
-        this.load.image('player', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
-        this.load.spritesheet('npc', '/assets/npc.png', {
-            frameWidth: 32,
-            frameHeight: 32
-        });
-        this.load.image('background', 'https://labs.phaser.io/assets/skies/space3.png');
-    }
+export default class Game extends Phaser.Scene {
 
-    create() {
-        this.add.image(400, 300, 'background');
+	constructor() {
+		super("Game");
 
-        this.player = this.physics.add.sprite(400, 300, 'player');
-        this.player.setCollideWorldBounds(true);
+		/* START-USER-CTR-CODE */
+		// Write your code here.
+		/* END-USER-CTR-CODE */
+	}
 
-        this.cursors = this.input.keyboard.createCursorKeys();
+	editorCreate(): void {
 
-        this.createNPC(600, 400, 'qcm1');
-        this.createNPC(200, 200, 'enigme1');
+		// bitemap_1
+		this.add.image(510, 328, "bitemap");
 
-        EventBus.emit('current-scene-ready', this);
-    }
+		this.events.emit("scene-awake");
+	}
 
-    update() {
-        const speed = 200;
-        this.player.setVelocity(0);
-        if (this.cursors.left.isDown) this.player.setVelocityX(-speed);
-        if (this.cursors.right.isDown) this.player.setVelocityX(speed);
-        if (this.cursors.up.isDown) this.player.setVelocityY(-speed);
-        if (this.cursors.down.isDown) this.player.setVelocityY(speed);
-    }
+	/* START-USER-CODE */
 
-    createNPC(x: number, y: number, questId: string) {
-        const npc = this.physics.add.sprite(x, y, 'npc');
-        npc.setImmovable(true);
+	// Write your code here
 
-        npc.questId = questId;
+	create() {
 
-        npc.play('npc_idle_down');
+		this.editorCreate();
+	}
 
-        // Zone d'interaction
-        const zone = this.add.zone(x, y, 50, 50);
-        this.physics.world.enable(zone);
-        zone.body.setAllowGravity(false);
-        zone.body.moves = false;
-
-        this.physics.add.overlap(this.player, zone, () => {
-            this.onNPCInteraction(npc);
-        });
-
-        npc.interactionZone = zone;
-
-        return npc;
-    }
-
-    completeQuest(data?: any) {
-        const ok = QuestManager.completeCurrent(data);
-        if (ok) this.questActive = false;
-        EventBus.emit('quest-completed', ok);
-    }
-
-    onNPCInteraction(npc: any) {
-    console.log("Interaction avec PNJ → quête :", npc.questId);
-
-    if (!npc.questId) return;
-
-    QuestManager.startQuest(npc.questId);
+	/* END-USER-CODE */
 }
 
-}
+/* END OF COMPILED CODE */
 
+// You can write more code here
