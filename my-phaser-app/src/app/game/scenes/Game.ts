@@ -1,3 +1,6 @@
+"use client"
+
+import * as Phaser from 'phaser';
 
 // You can write more code here
 
@@ -5,7 +8,6 @@
 
 /* START-USER-IMPORTS */
 /* END-USER-IMPORTS */
-'use client';
 
 import { QuestManager } from "../quests/QuestManager";
 import { EventBus } from '@/app/game/EventBus';
@@ -24,7 +26,7 @@ export default class Game extends Phaser.Scene {
     preload() {
         this.load.image('player', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
         this.load.spritesheet('npc', '/assets/npc.png', {
-            frameWidth: 32,
+            frameWidth: 16,
             frameHeight: 32
         });
         this.load.image('background', 'https://labs.phaser.io/assets/skies/space3.png');
@@ -32,16 +34,67 @@ export default class Game extends Phaser.Scene {
 
 	create(): void {
 
-		// bitemap_1
-		this.add.image(510, 328, "bitemap");
+        this.cameras.main.setZoom(1.5);
+        
+        // Tilemap and collisions
+        const map = this.make.tilemap({ key: 'bitmap' });
+
+        const tilesets: Phaser.Tilemaps.Tileset[] = [];
+        const caveTileset = map.addTilesetImage('bitemap', 'bitemap');
+        if (caveTileset) tilesets.push(caveTileset);
+        const overworldTileset = map.addTilesetImage('Overworld', 'overworld');
+        if (overworldTileset) tilesets.push(overworldTileset);
+
+        const layerTilesets: Phaser.Tilemaps.Tileset | Phaser.Tilemaps.Tileset[] = tilesets.length === 1 ? tilesets[0] : tilesets;
+
+        // Render base/grass layer (hidden by default in Tiled)
+        const groundLayer = map.getLayer('grass') ? map.createLayer('grass', layerTilesets) : null;
+        if (groundLayer) {
+            groundLayer.setVisible(true);
+            groundLayer.setDepth(0);
+        }
+
+        let collisionLayer: Phaser.Tilemaps.TilemapLayer | null = null;
+        const objectsLayerIndex = map.getLayerIndex('Objects');
+        if (objectsLayerIndex !== null && objectsLayerIndex >= 0) {
+            collisionLayer = map.createLayer(objectsLayerIndex, layerTilesets);
+        }
+
+        // Fallback: display the first tile layer when the object layer cannot be resolved (e.g. nested Tiled group)
+        if (!collisionLayer) {
+            const firstTileLayer = map.layers.find((layerData: any) => layerData?.type === 'tilelayer' && layerData?.name !== 'grass');
+            if (firstTileLayer?.name) {
+                collisionLayer = map.createLayer(firstTileLayer.name, layerTilesets);
+            }
+        }
+
+        if (collisionLayer) {
+            collisionLayer.setVisible(true);
+            collisionLayer.setDepth(1);
+            collisionLayer.setCollisionByExclusion([-1]);
+        }
+
+        // Resize world to map size
+        this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
         this.player = this.physics.add.sprite(400, 300, 'player');
         this.player.setCollideWorldBounds(true);
+        this.player.setDepth(10);
+        this.player.setScale(2);
+        this.cameras.main.startFollow(this.player);
+        this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        this.createNPC(600, 400, 'qcm1');
-        this.createNPC(200, 200, 'enigme1');
+        const npc1 = this.createNPC(600, 400, 'qcm1');
+        const npc2 = this.createNPC(200, 200, 'enigme1');
+
+        // Block the player on NPCs so collisions are physical
+        this.physics.add.collider(this.player, npc1);
+        this.physics.add.collider(this.player, npc2);
+        if (collisionLayer) {
+            this.physics.add.collider(this.player, collisionLayer);
+        }
 
         EventBus.emit('current-scene-ready', this);
     }
@@ -66,8 +119,12 @@ export default class Game extends Phaser.Scene {
         // Zone d'interaction
         const zone = this.add.zone(x, y, 50, 50);
         this.physics.world.enable(zone);
-        zone.body.setAllowGravity(false);
-        zone.body.moves = false;
+        npc.scaleX = 1.5;
+        npc.scaleY = 1.5;
+        const zoneBody = zone.body as Phaser.Physics.Arcade.Body;
+        zoneBody.setAllowGravity(false);
+        zoneBody.setImmovable(true);
+        zoneBody.moves = false;
 
         this.physics.add.overlap(this.player, zone, () => {
             this.onNPCInteraction(npc);

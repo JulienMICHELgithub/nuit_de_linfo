@@ -38,10 +38,9 @@ export default class Preloader extends Scene {
 
 	/* START-USER-CODE */
 
-	// Write your code here
+    // Write your code here
     init ()
     {
-
 		this.editorCreate();
 
         //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
@@ -52,10 +51,7 @@ export default class Preloader extends Scene {
 
             //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
             bar.width = 4 + (460 * progress);
-            
         });
-        this.load.image('background', 'assets/bitemap.png');
-        this.load.tilemapTiledJSON('bitmap', 'assets/bitmap.json');
     }
 
     preload ()
@@ -65,6 +61,9 @@ export default class Preloader extends Scene {
         
         // Load tilemap and tileset assets
         this.load.image('bitemap', 'assets/bitemap.png');
+        this.load.image('overworld', 'assets/Overworld.png');
+        this.load.image('background', 'assets/bitemap.png');
+        this.load.tilemapTiledJSON('bitmap', 'assets/bitmap.json');
     }
 
     create ()
