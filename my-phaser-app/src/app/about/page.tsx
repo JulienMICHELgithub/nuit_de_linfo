@@ -107,7 +107,7 @@ export default function Page() {
                                 backgroundColor: "#111"
                             }}
                         >
-                            <p  style={{ fontWeight: 900, fontSize: "2rem", color: "#ffffff" }}>Web Developer</p>
+                            <p  style={{ fontWeight: 900, fontSize: "2rem", color: "#ffffff" }}>Password is: cypher</p>
                         </div>
                     }
                     gridSize={12}
