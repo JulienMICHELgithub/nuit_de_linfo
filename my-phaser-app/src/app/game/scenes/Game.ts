@@ -164,6 +164,10 @@ export default class Game extends Phaser.Scene {
         if (ok) this.questActive = false;
         EventBus.emit('quest-completed', ok);
 
+        if (!this.scene.isVisible()) {
+            this.scene.setVisible(true);
+        }
+
         if (questId) {
             for (const npc of this.npcs) {
                 if (npc.questId === questId) {
@@ -171,6 +175,17 @@ export default class Game extends Phaser.Scene {
                     npc.questId = undefined;
                 }
             }
+        }
+
+        // Show completion dialog
+        if (ok && typeof window !== 'undefined') {
+            const event = new CustomEvent('start-dialog', {
+                detail: {
+                    message: 'Félicitations ! Vous avez terminé cette quête. Continuez votre aventure pour découvrir de nouveaux défis.',
+                    characterName: 'Narrateur',
+                },
+            });
+            window.dispatchEvent(event);
         }
     }
 
@@ -183,21 +198,51 @@ export default class Game extends Phaser.Scene {
         const quest = QuestManager.get(npc.questId);
         if (!quest) return;
 
-        QuestManager.startQuest(npc.questId);
+        // Show dialog before launching quest
+        if (typeof window !== 'undefined') {
+            const dialogMessage = `${quest.title}\n\n${quest.description}`;
+            const event = new CustomEvent('start-dialog', {
+                detail: {
+                    message: dialogMessage,
+                    characterName: 'PNJ',
+                },
+            });
+            window.dispatchEvent(event);
+
+            const onDialogEnd = () => {
+                window.removeEventListener('end-dialog', onDialogEnd);
+                this.launchQuestScene(quest, npc.questId);
+            };
+            window.addEventListener('end-dialog', onDialogEnd);
+        } else {
+            this.launchQuestScene(quest, npc.questId);
+        }
+    }
+
+    launchQuestScene(quest: any, questId: string) {
+        QuestManager.startQuest(questId);
 
         // Launch the appropriate scene based on quest type
         if (quest.type === 'qcm') {
-            this.scene.launch('QCMScene', { questId: npc.questId });
+            this.scene.launch('QCMScene', { questId });
             this.scene.pause();
+            this.scene.setVisible(false);
+            this.scene.bringToTop('QCMScene');
         } else if (quest.type === 'enigme') {
-            this.scene.launch('EnigmeScene', { questId: npc.questId });
+            this.scene.launch('EnigmeScene', { questId });
             this.scene.pause();
+            this.scene.setVisible(false);
+            this.scene.bringToTop('EnigmeScene');
         } else if (quest.type === 'puzzle') {
-            this.scene.launch('PuzzleScene', { questId: npc.questId });
+            this.scene.launch('PuzzleScene', { questId });
             this.scene.pause();
+            this.scene.setVisible(false);
+            this.scene.bringToTop('PuzzleScene');
         } else if (quest.type === 'snake') {
-            this.scene.launch('SnakeScene', { questId: npc.questId });
+            this.scene.launch('SnakeScene', { questId });
             this.scene.pause();
+            this.scene.setVisible(false);
+            this.scene.bringToTop('SnakeScene');
         }
     }
 

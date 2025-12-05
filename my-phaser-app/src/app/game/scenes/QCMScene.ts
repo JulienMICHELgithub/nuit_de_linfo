@@ -17,6 +17,9 @@ export default class QCMScene extends Scene {
     create() {
         const { question, answers } = this.quest;
 
+        // Render this scene above the paused game scene
+        this.scene.bringToTop();
+
         const dialogBoxFinishedEventListener = () => {
             window.removeEventListener('end-dialog', dialogBoxFinishedEventListener);
             // Do whatever is needed when the dialog is over
@@ -27,7 +30,7 @@ export default class QCMScene extends Scene {
         const ch = this.scale.height;
 
         // Dim overlay
-        this.add.rectangle(cw / 2, ch / 2, cw, ch, 0x000000, 0.6).setDepth(0);
+        this.add.rectangle(cw / 2, ch / 2, cw, ch, 0x000000, 0.6).setDepth(1000);
 
         // Panel
         const panelW = Math.min(700, cw - 80);
@@ -36,14 +39,15 @@ export default class QCMScene extends Scene {
         const panelY = ch / 2;
 
         const panel = this.add.rectangle(panelX, panelY, panelW, panelH, 0x1e1e2f, 0.98)
-            .setStrokeStyle(2, 0xffffff);
+            .setStrokeStyle(2, 0xffffff)
+            .setDepth(1001);
 
         // Title / question
         const title = this.add.text(panelX - panelW / 2 + 24, panelY - panelH / 2 + 24, question, {
             fontSize: "22px",
             color: "#ffffff",
             wordWrap: { width: panelW - 48 }
-        });
+        }).setDepth(1002);
 
         // Container for buttons
         this.panelContainer = this.add.container(0, 0);
@@ -58,10 +62,12 @@ export default class QCMScene extends Scene {
 
             const btnBg = this.add.rectangle(bx + panelW / 2 - 40 - panelW / 2, by, panelW - 80, btnH, 0x2b2b3f)
                 .setOrigin(0, 0.5)
-                .setInteractive({ useHandCursor: true });
+                .setInteractive({ useHandCursor: true })
+                .setDepth(1001);
 
             const btnText = this.add.text(bx, by, a, { fontSize: "18px", color: "#ffffff" })
-                .setOrigin(0, 0.5);
+                .setOrigin(0, 0.5)
+                .setDepth(1002);
 
             btnBg.on('pointerover', () => btnBg.setFillStyle(0x3b3b5f));
             btnBg.on('pointerout', () => btnBg.setFillStyle(0x2b2b3f));
@@ -72,8 +78,8 @@ export default class QCMScene extends Scene {
         });
 
         // Add small instruction
-        this.add.text(panelX - panelW / 2 + 24, panelY + panelH / 2 - 40, "Cliquez pour répondre — ou utilisez la souris/touch", { fontSize: "14px", color: "#cccccc" });
-        this.panelContainer.setDepth(1);
+        this.add.text(panelX - panelW / 2 + 24, panelY + panelH / 2 - 40, "Cliquez pour répondre — ou utilisez la souris/touch", { fontSize: "14px", color: "#cccccc" }).setDepth(1002);
+        this.panelContainer.setDepth(1001);
     }
 
     answer(index: number) {
@@ -99,8 +105,9 @@ export default class QCMScene extends Scene {
                 const game = this.scene.get("Game") as any;
                 game.completeQuest(true, this.quest.id);
 
-                this.scene.stop();
+                this.scene.setVisible('Game', true);
                 this.scene.resume("Game");
+                this.scene.stop();
             }, [], this);
         } else {
             // Feedback: incorrect answer, allow retry

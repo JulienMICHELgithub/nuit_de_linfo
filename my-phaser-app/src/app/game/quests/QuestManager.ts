@@ -3,7 +3,6 @@ import { QCMQuest } from "./QCMQuest";
 import { EnigmeQuest } from "./EnigmeQuest";
 import { PuzzleQuest } from "./PuzzleQuest";
 import { SnakeQuest } from "./SnakeQuest";
-import Dialogbox from "../../dialogbox";
 
 // Types de quêtes
 export type QuestType = "qcm" | "enigme" | "puzzle" | "snake";
@@ -64,6 +63,8 @@ export class QuestManager {
         const quest = this.quests[id];
         if (!quest) throw new Error("Quête inexistante : " + id);
         this.current = quest;
+
+        // Dialog dispatching removed - quest scenes handle their own UI
         quest.start();
     }
 

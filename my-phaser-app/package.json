@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@material-ui/core": "^4.12.4",
     "@material-ui/styles": "^4.11.5",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.4.2",

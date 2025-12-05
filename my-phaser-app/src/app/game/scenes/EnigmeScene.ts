@@ -19,6 +19,9 @@ export default class EnigmeScene extends Scene {
     create() {
         const { description } = this.quest;
 
+        // Render this scene above the paused game scene
+        this.scene.bringToTop();
+
         const cw = this.scale.width;
         const ch = this.scale.height;
 
@@ -146,8 +149,9 @@ export default class EnigmeScene extends Scene {
                 // Clean up input BEFORE stopping scene
                 this.cleanupInput();
 
-                this.scene.stop();
+                this.scene.setVisible('Game', true);
                 this.scene.resume("Game");
+                this.scene.stop();
             }, [], this);
         } else {
             // Feedback: incorrect answer, allow retry

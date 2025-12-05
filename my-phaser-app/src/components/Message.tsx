@@ -1,14 +1,21 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useRef } from 'react';
 import { animated, useTransition } from 'react-spring';
-// import { makeStyles } from '@material-ui/core/styles';
 
 const Message = ({
-    message = [],
+    message = '',
     trail = 35,
     onMessageEnded = () => {},
     forceShowFullMessage = false,
 }) => {
-    const classes = useStyles();
+    const isMountedRef = useRef(true);
+
+    useEffect(() => {
+        isMountedRef.current = true;
+        return () => {
+            isMountedRef.current = false;
+        };
+    }, []);
+
     const items = useMemo(
         () => message.trim().split('').map((letter, index) => ({
             item: letter,
@@ -22,7 +29,7 @@ const Message = ({
         from: { display: 'none' },
         enter: { display: '' },
         onRest: (status, controller, item) => {
-            if (item.key === items.length - 1) {
+            if (isMountedRef.current && item.key === items.length - 1) {
                 onMessageEnded();
             }
         },

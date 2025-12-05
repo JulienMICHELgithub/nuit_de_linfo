@@ -40,12 +40,15 @@ export default function GamePage() {
         };
     }, []);
 
-    const [message, setMessage] = useState('');
+    const [dialogMessage, setDialogMessage] = useState('');
+    const [dialogCharacter, setDialogCharacter] = useState('');
     const [showDialogBox, setShowDialogBox] = useState(false);
 
     useEffect(() => {
-        const dialogBoxEventListener = ({ detail }) => {
-            setMessage(detail.message);
+        const dialogBoxEventListener = (event: Event) => {
+            const { detail } = event as CustomEvent<{ message?: string; characterName?: string }>;
+            setDialogMessage(detail?.message ?? '');
+            setDialogCharacter(detail?.characterName ?? '');
             setShowDialogBox(true);
         };
         window.addEventListener('start-dialog', dialogBoxEventListener);
@@ -53,21 +56,23 @@ export default function GamePage() {
         return () => {
             window.removeEventListener('start-dialog', dialogBoxEventListener);
         };
-    });
+    }, []);
 
     const handleMessageIsDone = useCallback(() => {
         const customEvent = new CustomEvent('end-dialog');
         window.dispatchEvent(customEvent);
 
-        setMessage('');
+        setDialogMessage('');
+        setDialogCharacter('');
         setShowDialogBox(false);
-    }, [characterName]);
+    }, []);
 
     return (
     <div className='flex items-center justify-center h-screen w-screen bg-black'>
         {showDialogBox && (
                 <DialogBox
-                    message={message}
+                    message={dialogMessage}
+                    characterName={dialogCharacter}
                     onDone={handleMessageIsDone}
                 />
         )}

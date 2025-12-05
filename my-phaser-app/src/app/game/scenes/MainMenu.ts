@@ -45,9 +45,25 @@ export default class MainMenu extends Phaser.Scene {
         this.startButton.on('pointerover', () => this.startButton.setTint(0xaaaaaa));
         this.startButton.on('pointerout', () => this.startButton.clearTint());
 
-        // Click -> lancer GameScene
+        // Click -> show intro dialog then launch GameScene
         this.startButton.on('pointerdown', () => {
-            this.scene.start('Game');
+            if (typeof window !== 'undefined') {
+                const event = new CustomEvent('start-dialog', {
+                    detail: {
+                        message: 'Bienvenue dans l\'aventure ! Explorez le monde, rencontrez des PNJ et accomplissez des quêtes pour sauver la planète numérique.',
+                        characterName: 'Narrateur',
+                    },
+                });
+                window.dispatchEvent(event);
+
+                const onDialogEnd = () => {
+                    window.removeEventListener('end-dialog', onDialogEnd);
+                    this.scene.start('Game');
+                };
+                window.addEventListener('end-dialog', onDialogEnd);
+            } else {
+                this.scene.start('Game');
+            }
         });
 
         EventBus.emit('current-scene-ready', this);
