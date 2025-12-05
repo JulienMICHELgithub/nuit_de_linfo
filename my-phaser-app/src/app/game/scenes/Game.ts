@@ -111,8 +111,11 @@ export default class Game extends Phaser.Scene {
         if (this.cursors.up.isDown) this.player.setVelocityY(-speed);
         if (this.cursors.down.isDown) this.player.setVelocityY(speed);
 
-        // When player presses F, check nearby NPC interaction zones
-        if (Phaser.Input.Keyboard.JustDown(this.interactKey)) {
+        // When player presses F, check nearby NPC interaction zones (only if no DOM input is focused)
+        const focusedElement = document.activeElement;
+        const isInputFocused = focusedElement && focusedElement.tagName === 'INPUT';
+
+        if (Phaser.Input.Keyboard.JustDown(this.interactKey) && !isInputFocused) {
             for (const npc of this.npcs) {
                 if (npc.interactionZone && this.physics.overlap(this.player, npc.interactionZone)) {
                     this.onNPCInteraction(npc);

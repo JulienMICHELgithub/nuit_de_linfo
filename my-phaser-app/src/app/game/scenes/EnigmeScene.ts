@@ -6,6 +6,7 @@ export default class EnigmeScene extends Scene {
     inputField: any;
     submitButton: any;
     panelContainer: any;
+    gameContainer: any;
 
     constructor() {
         super("EnigmeScene");
@@ -43,20 +44,31 @@ export default class EnigmeScene extends Scene {
         // Input label
         this.add.text(panelX - panelW / 2 + 40, panelY - 60, "Votre réponse :", { fontSize: "16px", color: "#cccccc" });
 
+        // Get the game container to position input correctly
+        const gameContainer = document.getElementById('game-content');
+        const gameRect = gameContainer?.getBoundingClientRect() || { left: 0, top: 0 };
+
+        // Calculate input position: panel left + padding, panel top + input y offset
+        const inputLeftPx = gameRect.left + (panelX - panelW / 2 + 40);
+        const inputTopPx = gameRect.top + (panelY - 20);
+
         // Input field (text box using DOM input)
         const inputElement = document.createElement("input");
         inputElement.type = "text";
         inputElement.placeholder = "Entrez votre réponse...";
-        inputElement.style.position = "absolute";
-        inputElement.style.left = (panelX - panelW / 2 + 40) + "px";
-        inputElement.style.top = (panelY - 20) + "px";
+        inputElement.style.position = "fixed";
+        inputElement.style.left = inputLeftPx + "px";
+        inputElement.style.top = inputTopPx + "px";
         inputElement.style.width = (panelW - 80) + "px";
+        inputElement.style.height = "40px";
         inputElement.style.padding = "8px 12px";
         inputElement.style.fontSize = "16px";
         inputElement.style.backgroundColor = "#2b2b3f";
         inputElement.style.color = "#ffffff";
-        inputElement.style.border = "1px solid #ffffff";
+        inputElement.style.border = "2px solid #ffffff";
         inputElement.style.boxSizing = "border-box";
+        inputElement.style.zIndex = "1000";
+        inputElement.style.fontFamily = "Arial, sans-serif";
         document.body.appendChild(inputElement);
 
         this.inputField = inputElement;
@@ -75,9 +87,17 @@ export default class EnigmeScene extends Scene {
 
         this.submitButton = submitBtn;
 
-        // Allow Enter key to submit
+        // Allow Enter key to submit, block F key
         inputElement.addEventListener('keypress', (e: any) => {
             if (e.key === 'Enter') this.submitAnswer();
+            // Allow typing F in the input (prevent game interaction)
+        });
+
+        inputElement.addEventListener('keydown', (e: any) => {
+            // Prevent F key from triggering game interactions when input is focused
+            if (e.key.toLowerCase() === 'f' || e.key === 'F') {
+                e.stopPropagation();
+            }
         });
 
         // Add instruction
@@ -123,6 +143,9 @@ export default class EnigmeScene extends Scene {
                 const game = this.scene.get("Game") as any;
                 game.completeQuest(true, this.quest.id);
 
+                // Clean up input BEFORE stopping scene
+                this.cleanupInput();
+
                 this.scene.stop();
                 this.scene.resume("Game");
             }, [], this);
@@ -143,10 +166,17 @@ export default class EnigmeScene extends Scene {
         }
     }
 
-    shutdown() {
-        // Clean up DOM input element
-        if (this.inputField && this.inputField.parentNode) {
-            this.inputField.parentNode.removeChild(this.inputField);
+    cleanupInput() {
+        if (this.inputField) {
+            if (this.inputField.parentNode) {
+                this.inputField.parentNode.removeChild(this.inputField);
+            }
+            this.inputField = null;
         }
+    }
+
+    shutdown() {
+        // Clean up DOM input element on scene shutdown
+        this.cleanupInput();
     }
 }
