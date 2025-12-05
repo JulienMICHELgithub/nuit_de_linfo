@@ -1,5 +1,7 @@
 "use client"
 
+import React from "react";
+
 import LogoThree3D from "@/components/navbar-components/LogoThree3D";
 import serverDev01 from "@/../public/developers/01.jpg"
 import mobilDev from "../../../public/developers/04.png"
@@ -10,7 +12,7 @@ import PixelTransition from '@/components/PixelTransition';
 
 export default function Page() {
     return (
-        <main className="bg-black relative pt-20 text-white">
+<div className="bg-black relative pt-20 text-white">
             <section className="grid md:grid-cols-2 items-center gap-8">
                 <div className="py-5 flex justify-center">
                     <LogoThree3D /> {/* ← REMPLACE Image */}
@@ -143,7 +145,7 @@ export default function Page() {
                     className="custom-pixel-card"
                 />
             </section>
-        </main>
+</div>
     );
 }
 
