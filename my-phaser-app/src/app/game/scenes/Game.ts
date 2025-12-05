@@ -92,10 +92,14 @@ export default class Game extends Phaser.Scene {
 
         const npc1 = this.createNPC(600, 400, 'qcm1');
         const npc2 = this.createNPC(200, 200, 'enigme1');
+        const npc3 = this.createNPC(500, 500, 'puzzle1');
+        const npc4 = this.createNPC(720, 360, 'snake1');
 
         // Block the player on NPCs so collisions are physical
         this.physics.add.collider(this.player, npc1);
         this.physics.add.collider(this.player, npc2);
+        this.physics.add.collider(this.player, npc3);
+        this.physics.add.collider(this.player, npc4);
         if (collisionLayer) {
             this.physics.add.collider(this.player, collisionLayer);
         }
@@ -187,6 +191,12 @@ export default class Game extends Phaser.Scene {
             this.scene.pause();
         } else if (quest.type === 'enigme') {
             this.scene.launch('EnigmeScene', { questId: npc.questId });
+            this.scene.pause();
+        } else if (quest.type === 'puzzle') {
+            this.scene.launch('PuzzleScene', { questId: npc.questId });
+            this.scene.pause();
+        } else if (quest.type === 'snake') {
+            this.scene.launch('SnakeScene', { questId: npc.questId });
             this.scene.pause();
         }
     }
