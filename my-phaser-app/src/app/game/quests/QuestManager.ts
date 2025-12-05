@@ -22,11 +22,13 @@ export interface Quest extends QuestBase {
 }
 
 export class QuestManager {
+    static totalScore: number = 0;
+    
     // Toutes les quêtes sont de type Quest
     static quests: Record<string, Quest> = {
         qcm1: new QCMQuest({
             id: "qcm1",
-            title: "Choisis l'alternative",
+            title: "*Choisis l'alternative!*",
             description: "Quelle alternative respecte ta vie privée ?",
             reward: 50,
             question: "quelle messagerie respecte ta vie privée ?",
@@ -36,7 +38,7 @@ export class QuestManager {
 
         enigme1: new EnigmeQuest({
             id: "enigme1",
-            title: "Résous l'énigme",
+            title: "*Résous l'énigme*",
             description: "Trouve le mot de passe secret",
             reward: 100,
             answer: "cypher"
@@ -44,14 +46,14 @@ export class QuestManager {
 
         puzzle1: new PuzzleQuest({
             id: "puzzle1",
-            title: "Mini-puzzle",
+            title: "*Mini-puzzle*",
             description: "Résous le puzzle pour continuer",
             reward: 150
         }),
 
         snake1: new SnakeQuest({
             id: "snake1",
-            title: "Mini-Snake",
+            title: "*Mini-Snake*",
             description: "Attrape 5 items avec le serpent",
             reward: 200
         })
@@ -72,17 +74,19 @@ export class QuestManager {
         return this.quests[id];
     }
 
-    static completeCurrent(data?: any) {
-        if (!this.current) return false;
+    static completeCurrent(data?: any): { success: boolean; totalScore: number } {
+        if (!this.current) return { success: false, totalScore: this.totalScore };
         const id = this.current.id;
         const ok = this.current.complete(data);
         if (ok) {
-            console.log("Quête réussie ! Récompense :", this.current.reward);
+            const reward = typeof this.current.reward === 'number' ? this.current.reward : 0;
+            this.totalScore += reward;
+            console.log("Quête réussie ! Récompense :", reward, "Score total:", this.totalScore);
             // Remove quest so it cannot be retried
             delete this.quests[id];
             this.current = undefined;
         }
-        return ok;
+        return { success: ok, totalScore: this.totalScore };
     }
 }
 

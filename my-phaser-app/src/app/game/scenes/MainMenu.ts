@@ -50,7 +50,7 @@ export default class MainMenu extends Phaser.Scene {
             if (typeof window !== 'undefined') {
                 const event = new CustomEvent('start-dialog', {
                     detail: {
-                        message: 'Bienvenue dans l\'aventure ! Explorez le monde, rencontrez des PNJ et accomplissez des quêtes pour sauver la planète numérique.',
+                        message: 'Dans un monde gouverné par les GAFAM, seuls les plus courageux osent défier leur emprise...\n\nÊtes-vous prêt à relever le défi et à restaurer la liberté numérique ?',
                         characterName: 'Narrateur',
                     },
                 });

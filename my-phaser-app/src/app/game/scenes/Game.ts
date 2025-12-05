@@ -56,17 +56,13 @@ export default class Game extends Phaser.Scene {
         }
 
         let collisionLayer: Phaser.Tilemaps.TilemapLayer | null = null;
-        const objectsLayerIndex = map.getLayerIndex('Objects');
-        if (objectsLayerIndex !== null && objectsLayerIndex >= 0) {
-            collisionLayer = map.createLayer(objectsLayerIndex, layerTilesets);
-        }
-
-        // Fallback: display the first tile layer when the object layer cannot be resolved (e.g. nested Tiled group)
-        if (!collisionLayer) {
-            const firstTileLayer = map.layers.find((layerData: any) => layerData?.type === 'tilelayer' && layerData?.name !== 'grass');
-            if (firstTileLayer?.name) {
-                collisionLayer = map.createLayer(firstTileLayer.name, layerTilesets);
-            }
+        
+        // The Objects layer is nested inside "Group 1" so the full path is "Group 1/Objects"
+        try {
+            collisionLayer = map.createLayer('Group 1/Objects', layerTilesets);
+            console.log('Created Objects layer:', collisionLayer);
+        } catch (e) {
+            console.log('Failed to create Objects layer:', e);
         }
 
         if (collisionLayer) {
@@ -78,10 +74,9 @@ export default class Game extends Phaser.Scene {
         // Resize world to map size
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
-        this.player = this.physics.add.sprite(400, 300, 'player');
+        this.player = this.physics.add.sprite(450, 310, 'player');
         this.player.setCollideWorldBounds(true);
         this.player.setDepth(10);
-        this.player.setScale(2);
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
@@ -90,10 +85,10 @@ export default class Game extends Phaser.Scene {
         // Key to interact with NPCs (press 'F')
         this.interactKey = (this.input as any).keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
 
+        const npc2 = this.createNPC(200, 150, 'enigme1');
+        const npc3 = this.createNPC(170, 450, 'puzzle1');
         const npc1 = this.createNPC(600, 400, 'qcm1');
-        const npc2 = this.createNPC(200, 200, 'enigme1');
-        const npc3 = this.createNPC(500, 500, 'puzzle1');
-        const npc4 = this.createNPC(720, 360, 'snake1');
+        const npc4 = this.createNPC(760, 260, 'snake1');
 
         // Block the player on NPCs so collisions are physical
         this.physics.add.collider(this.player, npc1);
@@ -160,9 +155,11 @@ export default class Game extends Phaser.Scene {
         return npc;
     }
 
-    completeQuest(ok: boolean, questId?: string) {
-        if (ok) this.questActive = false;
-        EventBus.emit('quest-completed', ok);
+    completeQuest(result: { success: boolean; totalScore: number }, questId?: string) {
+        const { success, totalScore } = result;
+        
+        if (success) this.questActive = false;
+        EventBus.emit('quest-completed', success);
 
         if (!this.scene.isVisible()) {
             this.scene.setVisible(true);
@@ -177,11 +174,20 @@ export default class Game extends Phaser.Scene {
             }
         }
 
-        // Show completion dialog
-        if (ok && typeof window !== 'undefined') {
+        // Check for victory condition
+        if (totalScore >= 500 && typeof window !== 'undefined') {
             const event = new CustomEvent('start-dialog', {
                 detail: {
-                    message: 'Félicitations ! Vous avez terminé cette quête. Continuez votre aventure pour découvrir de nouveaux défis.',
+                    message: 'VICTOIRE ! Vous avez atteint 500 points ! Vous avez libéré tous les villages de l\'oppression numérique et restauré la liberté sur Internet. Félicitations, héros !',
+                    characterName: '🎉 FIN DU JEU 🎉',
+                },
+            });
+            window.dispatchEvent(event);
+        } else if (success && typeof window !== 'undefined') {
+            // Show completion dialog
+            const event = new CustomEvent('start-dialog', {
+                detail: {
+                    message: `Félicitations ! Vous avez terminé cette quête. Score total: ${totalScore}/500. Continuez de libérer les autres villages de l\'oppression numérique.`,
                     characterName: 'Narrateur',
                 },
             });
@@ -204,7 +210,7 @@ export default class Game extends Phaser.Scene {
             const event = new CustomEvent('start-dialog', {
                 detail: {
                     message: dialogMessage,
-                    characterName: 'PNJ',
+                    characterName: 'Zuck',
                 },
             });
             window.dispatchEvent(event);

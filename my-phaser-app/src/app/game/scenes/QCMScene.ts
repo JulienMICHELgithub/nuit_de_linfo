@@ -87,9 +87,9 @@ export default class QCMScene extends Scene {
         this.answerButtons.forEach((b: any) => b.disableInteractive && b.disableInteractive());
 
         // Use QuestManager to complete the current quest with the chosen answer index
-        const ok = QuestManager.completeCurrent(index);
+        const result = QuestManager.completeCurrent(index);
 
-        if (ok) {
+        if (result.success) {
             // Show success message and prevent retry
             const cw = this.scale.width;
             const ch = this.scale.height;
@@ -103,7 +103,7 @@ export default class QCMScene extends Scene {
             // retour à GameScene after a short delay to show success
             this.time.delayedCall(1000, () => {
                 const game = this.scene.get("Game") as any;
-                game.completeQuest(true, this.quest.id);
+                game.completeQuest(result, this.quest.id);
 
                 this.scene.setVisible('Game', true);
                 this.scene.resume("Game");

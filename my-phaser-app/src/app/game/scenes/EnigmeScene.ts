@@ -127,9 +127,9 @@ export default class EnigmeScene extends Scene {
         this.submitButton.disableInteractive && this.submitButton.disableInteractive();
 
         // Use QuestManager to complete the current quest with the user's answer
-        const ok = QuestManager.completeCurrent(userAnswer);
+        const result = QuestManager.completeCurrent(userAnswer);
 
-        if (ok) {
+        if (result.success) {
             // Show success message
             const cw = this.scale.width;
             const ch = this.scale.height;
@@ -144,7 +144,7 @@ export default class EnigmeScene extends Scene {
             // Return to GameScene after a short delay
             this.time.delayedCall(1000, () => {
                 const game = this.scene.get("Game") as any;
-                game.completeQuest(true, this.quest.id);
+                game.completeQuest(result, this.quest.id);
 
                 // Clean up input BEFORE stopping scene
                 this.cleanupInput();
