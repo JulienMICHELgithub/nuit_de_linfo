@@ -1,4 +1,4 @@
-import Logo from "@/components/navbar-components/logo";
+import LogoSpline3D from "@/components/navbar-components/logo-spline";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -81,8 +81,8 @@ export default function Navbar() {
                     </div>
                     {/* Main nav */}
                     <div className="flex items-center gap-6">
-                        <a className="text-white hover:text-white/90" href="#">
-                            <Logo />
+                        <a className="text-white hover:text-white/90 flex items-center" href="#">
+                            <LogoSpline3D />
                         </a>
                         {/* Navigation menu */}
                         <NavigationMenu className="h-full *:h-full max-md:hidden">

@@ -28,7 +28,7 @@ export default function Home() {
             <div className="absolute inset-0 flex flex-col items-center justify-center z-[5] pointer-events-none">
                 <div className="text-center max-w-md px-4 pointer-events-none">
                     <h1 className="text-5xl md:text-7xl font-black text-white mb-8 drop-shadow-2xl leading-tight">
-                        Ready to beat gafa
+                        Ready to beat gafam
                     </h1>
                 </div>
 
