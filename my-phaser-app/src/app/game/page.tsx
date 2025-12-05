@@ -13,6 +13,7 @@ export default function GamePage() {
         const MainMenuScene = require('@/app/game/scenes/MainMenu').default;
         const GameScene = require('@/app/game/scenes/Game').default;
         const QCMScene = require('@/app/game/scenes/QCMScene').default;
+        const EnigmeScene = require('@/app/game/scenes/EnigmeScene').default;
 
         const config: Phaser.Types.Core.GameConfig = {
             type: Phaser.AUTO,
@@ -23,7 +24,7 @@ export default function GamePage() {
                 default: 'arcade',
                 arcade: { gravity: { y: 0 }, debug: false }
             },
-            scene: [PreloaderScene, MainMenuScene, GameScene, QCMScene] // Preloader must be first
+            scene: [PreloaderScene, MainMenuScene, GameScene, QCMScene, EnigmeScene] // Preloader must be first
         };
 
         gameRef.current = new Phaser.Game(config);

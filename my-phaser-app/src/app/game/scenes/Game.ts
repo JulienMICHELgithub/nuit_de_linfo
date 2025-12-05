@@ -17,6 +17,7 @@ export default class Game extends Phaser.Scene {
     player: any;
     cursors: any;
     npcs: any[] = [];
+    interactKey: any;
     questActive: boolean = false;
 
     constructor() {
@@ -84,7 +85,10 @@ export default class Game extends Phaser.Scene {
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
-        this.cursors = this.input.keyboard.createCursorKeys();
+        this.cursors = (this.input as any).keyboard.createCursorKeys();
+
+        // Key to interact with NPCs (press 'F')
+        this.interactKey = (this.input as any).keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
 
         const npc1 = this.createNPC(600, 400, 'qcm1');
         const npc2 = this.createNPC(200, 200, 'enigme1');
@@ -106,10 +110,20 @@ export default class Game extends Phaser.Scene {
         if (this.cursors.right.isDown) this.player.setVelocityX(speed);
         if (this.cursors.up.isDown) this.player.setVelocityY(-speed);
         if (this.cursors.down.isDown) this.player.setVelocityY(speed);
+
+        // When player presses F, check nearby NPC interaction zones
+        if (Phaser.Input.Keyboard.JustDown(this.interactKey)) {
+            for (const npc of this.npcs) {
+                if (npc.interactionZone && this.physics.overlap(this.player, npc.interactionZone)) {
+                    this.onNPCInteraction(npc);
+                    break;
+                }
+            }
+        }
     }
 
     createNPC(x: number, y: number, questId: string) {
-        const npc = this.physics.add.sprite(x, y, 'npc');
+        const npc: any = this.physics.add.sprite(x, y, 'npc');
         npc.setImmovable(true);
 
         npc.questId = questId;
@@ -126,19 +140,31 @@ export default class Game extends Phaser.Scene {
         zoneBody.setImmovable(true);
         zoneBody.moves = false;
 
-        this.physics.add.overlap(this.player, zone, () => {
-            this.onNPCInteraction(npc);
-        });
-
+        // Register NPC and its interaction zone for manual interaction (press F)
         npc.interactionZone = zone;
+        // small hint text above NPC
+        const hint = this.add.text(x, y - 36, 'Press F', { fontSize: '12px', color: '#ffffff' }).setOrigin(0.5);
+        // Show hint only if quest is available
+        hint.setVisible(!!(QuestManager.get && QuestManager.get(questId)));
+        npc.hintText = hint;
+
+        this.npcs.push(npc);
 
         return npc;
     }
 
-    completeQuest(data?: any) {
-        const ok = QuestManager.completeCurrent(data);
+    completeQuest(ok: boolean, questId?: string) {
         if (ok) this.questActive = false;
         EventBus.emit('quest-completed', ok);
+
+        if (questId) {
+            for (const npc of this.npcs) {
+                if (npc.questId === questId) {
+                    if (npc.hintText) npc.hintText.setVisible(false);
+                    npc.questId = undefined;
+                }
+            }
+        }
     }
 
     onNPCInteraction(npc: any) {
@@ -146,7 +172,20 @@ export default class Game extends Phaser.Scene {
 
     if (!npc.questId) return;
 
+    // Check that the quest still exists (avoid throwing when quest was already completed)
+    const quest = QuestManager.get(npc.questId);
+    if (!quest) return;
+
     QuestManager.startQuest(npc.questId);
+
+    // Launch the appropriate scene based on quest type
+    if (quest.type === 'qcm') {
+        this.scene.launch('QCMScene', { questId: npc.questId });
+        this.scene.pause();
+    } else if (quest.type === 'enigme') {
+        this.scene.launch('EnigmeScene', { questId: npc.questId });
+        this.scene.pause();
+    }
 }
 
 

@@ -1,6 +1,6 @@
 import { QuestBase } from "./QuestManager";
 
-type QCMQuestOptions = QuestBase & {
+type QCMQuestOptions = Omit<QuestBase, "type"> & {
     question: string;
     answers: string[];
     correct: number;

@@ -29,7 +29,7 @@ export class QuestManager {
             title: "Choisis l'alternative",
             description: "Quelle alternative respecte ta vie privée ?",
             reward: 50,
-            question: "Alternative à Gmail ?",
+            question: "quelle messagerie respecte ta vie privée ?",
             answers: ["Gmail", "ProtonMail"],
             correct: 1
         }),
@@ -66,11 +66,18 @@ export class QuestManager {
         quest.start();
     }
 
+    static get(id: string) {
+        return this.quests[id];
+    }
+
     static completeCurrent(data?: any) {
         if (!this.current) return false;
+        const id = this.current.id;
         const ok = this.current.complete(data);
         if (ok) {
             console.log("Quête réussie ! Récompense :", this.current.reward);
+            // Remove quest so it cannot be retried
+            delete this.quests[id];
             this.current = undefined;
         }
         return ok;
