@@ -29,7 +29,7 @@ export default function Page() {
                     </p>
                     <br />
                     <p className="max-w-lg">
-                        L’objectif est d’offrir une expérience didactique gamifiée, à mi-chemin entre le jeu d’apprentissage et le parcours initiatique. L’univers visuel et narratif du RPG sert de fil conducteur à une pédagogie immersive : chaque interaction devient un apprentissage concret vers une culture numérique plus responsable et décentralisée. À travers ce projet, LibreQuest aspire à construire une nouvelle façon d’apprendre le numérique — libre, communautaire et ouverte à tous.
+                        L’objectif est d’offrir une expérience didactique gamifiée, à mi-chemin entre le jeu d’apprentissage et le parcours initiatique. L’univers visuel et narratif du RPG sert de fil conducteur à une pédagogie immersive : chaque interaction devient un apprentissage concret vers une culture numérique plus responsable et décentralisée. À travers ce projet, OpenIt aspire à construire une nouvelle façon d’apprendre le numérique libre, communautaire et ouverte à tous.
                     </p>
                 </div>
 
