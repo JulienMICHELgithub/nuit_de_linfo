@@ -2,14 +2,48 @@
 /* END-USER-IMPORTS */
 
 import React, { useCallback, useEffect, useState } from 'react';
-// import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+
+// const useStyles = makeStyles((theme) => ({
+// dialogWindow: ({ screenWidth, screenHeight }) => {
+//         const messageBoxHeight = Math.ceil(screenHeight / 3.5);
+// 
+//         return {
+//             imageRendering: 'pixelated',
+//             textTransform: 'uppercase',
+//             backgroundColor: '#e2b27e',
+//             border: 'solid',
+//             borderImage: `url("${dialogBorderBox}") 6 / 12px 12px 12px 12px stretch`,
+//             padding: '16px',
+//             position: 'absolute',
+//             top: `${Math.ceil(screenHeight - (messageBoxHeight + (messageBoxHeight * 0.1)))}px`,
+//             width: `${Math.ceil(screenWidth * 0.8)}px`,
+//             left: '50%',
+//             transform: 'translate(-50%, 0%)',
+//             minHeight: `${messageBoxHeight}px`,
+//         };
+//     },
+//     dialogTitle: () => ({
+//         fontSize: '16px',
+//         marginBottom: '12px',
+//         fontWeight: 'bold',
+//     }),
+//     dialogFooter: () => ({
+//         fontSize: '16px',
+//         cursor: 'pointer',
+//         textAlign: 'end',
+//         position: 'absolute',
+//         right: '12px',
+//         bottom: '12px',
+//     }),
+// }));
 
 // Images
-import dialogBorderBox from '../images/dialog_borderbox.png';
-
-// Components
-import Message from './Message';
-
+// import dialogBorderBox from '../images/dialog_borderbox.png';
+// 
+// // Components
+// import Message from './Message';
+// 
 // const useStyles = makeStyles((theme) => ({
 //     dialogWindow: ({ screenWidth, screenHeight }) => {
 //         const messageBoxHeight = Math.ceil(screenHeight / 3.5);
@@ -43,6 +77,8 @@ import Message from './Message';
 //         bottom: '12px',
 //     }),
 // }));
+// 
+
 
 const DialogBox = ({
     messages,
@@ -87,7 +123,7 @@ const DialogBox = ({
     }, [handleClick]);
 
     return (
-        <div >
+        <div className={classes.dialogWindow}>
             <div >
                 {characterName}
             </div>

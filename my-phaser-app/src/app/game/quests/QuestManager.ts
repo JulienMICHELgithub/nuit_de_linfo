@@ -3,6 +3,7 @@ import { QCMQuest } from "./QCMQuest";
 import { EnigmeQuest } from "./EnigmeQuest";
 import { PuzzleQuest } from "./PuzzleQuest";
 import { SnakeQuest } from "./SnakeQuest";
+import Dialogbox from "../../dialogbox";
 
 // Types de quêtes
 export type QuestType = "qcm" | "enigme" | "puzzle" | "snake";

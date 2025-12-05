@@ -28,6 +28,12 @@ export class QCMQuest implements QuestBase {
     }
 
     start() {
+        const dialogBoxFinishedEventListener = () => {
+            window.removeEventListener('end-dialog', dialogBoxFinishedEventListener);
+            // Do whatever is needed when the dialog is over
+        };
+        window.addEventListener('end-dialog', dialogBoxFinishedEventListener);
+
         console.log(`QCM: ${this.question}`);
         this.answers.forEach((a, i) => console.log(`${i}: ${a}`));
     }

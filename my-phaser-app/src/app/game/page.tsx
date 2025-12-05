@@ -1,6 +1,9 @@
 "use client"
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import DialogBox from '@/components/DialogBox';
+
+const characterName = 'Hero';
 
 export default function GamePage() {
     const gameRef = useRef<any>(null);
@@ -35,8 +38,37 @@ export default function GamePage() {
         };
     }, []);
 
+    const [message, setMessage] = useState('');
+    const [showDialogBox, setShowDialogBox] = useState(false);
+
+    useEffect(() => {
+        const dialogBoxEventListener = ({ detail }) => {
+            setMessage(detail.message);
+            setShowDialogBox(true);
+        };
+        window.addEventListener('start-dialog', dialogBoxEventListener);
+
+        return () => {
+            window.removeEventListener('start-dialog', dialogBoxEventListener);
+        };
+    });
+
+    const handleMessageIsDone = useCallback(() => {
+        const customEvent = new CustomEvent('end-dialog');
+        window.dispatchEvent(customEvent);
+
+        setMessage('');
+        setShowDialogBox(false);
+    }, [characterName]);
+
     return (
     <div className='flex items-center justify-center h-screen w-screen bg-black'>
+        {showDialogBox && (
+                <DialogBox
+                    message={message}
+                    onDone={handleMessageIsDone}
+                />
+        )}
         <div id="game-content" className="flex items-center justify-center" />
     </div>);
 }

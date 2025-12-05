@@ -17,6 +17,12 @@ export default class QCMScene extends Scene {
     create() {
         const { question, answers } = this.quest;
 
+        const dialogBoxFinishedEventListener = () => {
+            window.removeEventListener('end-dialog', dialogBoxFinishedEventListener);
+            // Do whatever is needed when the dialog is over
+        };
+        window.addEventListener('end-dialog', dialogBoxFinishedEventListener);
+
         const cw = this.scale.width;
         const ch = this.scale.height;
 

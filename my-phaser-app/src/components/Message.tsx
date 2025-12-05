@@ -1,13 +1,6 @@
 import React, { useMemo } from 'react';
 import { animated, useTransition } from 'react-spring';
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles((theme) => ({
-    dialogMessage: () => ({
-        fontSize: '12px',
-        textTransform: 'uppercase',
-    }),
-}));
+// import { makeStyles } from '@material-ui/core/styles';
 
 const Message = ({
     message = [],
@@ -36,7 +29,7 @@ const Message = ({
     });
 
     return (
-        <div className={classes.dialogMessage}>
+        <div className="text-2xl transform uppercase">
             {forceShowFullMessage && (
                 <span>{message}</span>
             )}
