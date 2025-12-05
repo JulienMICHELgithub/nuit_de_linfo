@@ -33,10 +33,10 @@ export default class Game extends Phaser.Scene {
         this.load.image('background', 'https://labs.phaser.io/assets/skies/space3.png');
     }
 
-	create(): void {
+    create(): void {
 
         this.cameras.main.setZoom(1.5);
-        
+
         // Tilemap and collisions
         const map = this.make.tilemap({ key: 'bitmap' });
 
@@ -171,28 +171,28 @@ export default class Game extends Phaser.Scene {
     }
 
     onNPCInteraction(npc: any) {
-    console.log("Interaction avec PNJ → quête :", npc.questId);
+        console.log("Interaction avec PNJ → quête :", npc.questId);
 
-    if (!npc.questId) return;
+        if (!npc.questId) return;
 
-    // Check that the quest still exists (avoid throwing when quest was already completed)
-    const quest = QuestManager.get(npc.questId);
-    if (!quest) return;
+        // Check that the quest still exists (avoid throwing when quest was already completed)
+        const quest = QuestManager.get(npc.questId);
+        if (!quest) return;
 
-    QuestManager.startQuest(npc.questId);
+        QuestManager.startQuest(npc.questId);
 
-    // Launch the appropriate scene based on quest type
-    if (quest.type === 'qcm') {
-        this.scene.launch('QCMScene', { questId: npc.questId });
-        this.scene.pause();
-    } else if (quest.type === 'enigme') {
-        this.scene.launch('EnigmeScene', { questId: npc.questId });
-        this.scene.pause();
+        // Launch the appropriate scene based on quest type
+        if (quest.type === 'qcm') {
+            this.scene.launch('QCMScene', { questId: npc.questId });
+            this.scene.pause();
+        } else if (quest.type === 'enigme') {
+            this.scene.launch('EnigmeScene', { questId: npc.questId });
+            this.scene.pause();
+        }
     }
-}
 
 
-	/* END-USER-CODE */
+    /* END-USER-CODE */
 }
 
 /* END OF COMPILED CODE */
